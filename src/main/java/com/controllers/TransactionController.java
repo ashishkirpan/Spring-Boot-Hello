@@ -12,26 +12,79 @@
 
 package com.controllers;
 
-import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Enumeration;
+import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.pradeep.cms.model.Customer;
+import com.pradeep.cms.service.CustomerService;
 
 
 @RestController
 @RequestMapping("/transaction")
 public class TransactionController {
 
+	@Autowired
+	private CustomerService cs;
+	
 	@RequestMapping(value = "/callback", method = RequestMethod.GET)
-	public ModelAndView processResponse (HttpServletRequest request) { 
+	public ModelAndView processResponse (HttpServletRequest request) throws IOException { 
 		ModelAndView mv = new ModelAndView("welcome", "message", "Welcome To Spring Web MVC at Sotedge");
 		
-		mv.addObject("offer_id", request.getAttribute("offer_id"));
-		mv.addObject("offer_name", request.getParameter("offer_name"));
+		Customer customer = handleRequest(request);		
+		cs.addCustomer(customer);
 		
 		return mv;
 	}
 	
+	@RequestMapping(value = "/showData", method = RequestMethod.GET)
+	public ModelAndView getAllCustomers() {
+		
+		ModelAndView mv = new ModelAndView("customerList", "message", "Welcome");
+		
+		mv.addObject("customers", cs.getAllCustomers());
+		
+		return mv;
+	}
+	
+	
+	public Customer handleRequest(HttpServletRequest req) throws IOException {
+		
+		Customer customer = new Customer();
+		customer.setId(System.currentTimeMillis());
+        Enumeration<String> parameterNames = req.getParameterNames();
+        
+        StringBuffer buffer = new StringBuffer();
+        
+        while (parameterNames.hasMoreElements()) {
+ 
+        	
+            String paramName = parameterNames.nextElement();
+            buffer.append(paramName);
+            buffer.append("[");
+            
+            String[] paramValues = req.getParameterValues(paramName);
+            for (int i = 0; i < paramValues.length; i++) {
+            	
+                String paramValue = paramValues[i];
+                buffer.append(paramValue);
+                buffer.append(",");
+            }
+            buffer.append("]");
+        }
+ 
+        customer.setData(buffer.toString());
+        
+        return customer;
+    }
 }
