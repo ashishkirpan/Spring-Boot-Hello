@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 
 @RestController
@@ -24,8 +25,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class TransactionController {
 
 	@RequestMapping(value = "/callback", method = RequestMethod.GET)
-	public void processResponse (HttpServletRequest request) { 
-		System.out.println("Received request");
+	public ModelAndView processResponse (HttpServletRequest request) { 
+		ModelAndView mv = new ModelAndView("welcome", "message", "Welcome To Spring Web MVC at Sotedge");
+		
+		mv.addObject("offer_id", request.getAttribute("offer_id"));
+		mv.addObject("offer_name", request.getParameter("offer_name"));
+		
+		return mv;
 	}
 	
 }

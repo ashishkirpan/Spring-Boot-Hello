@@ -10,6 +10,8 @@
 <h2>
 Welcome Spring Web MVC
 </h2>
-${message}
+offer_id : ${offer_id } <br>
+${message} <br>
+offer_name : ${offer_name }
 </body>
 </html>
