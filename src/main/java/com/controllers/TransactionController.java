@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,11 +38,12 @@ public class TransactionController {
 	@Autowired
 	private CustomerService cs;
 	
-	@RequestMapping(value = "/callback", method = RequestMethod.GET)
-	public ModelAndView processResponse (HttpServletRequest request) throws IOException { 
+	@RequestMapping(value = "/callback/{networkId}", method = RequestMethod.GET)
+	public ModelAndView processResponse (@PathVariable("networkId") String networkId, HttpServletRequest request) throws IOException { 
 		ModelAndView mv = new ModelAndView("welcome", "message", "Welcome To Spring Web MVC at Sotedge");
 		
-		Customer customer = handleRequest(request);		
+		Customer customer = handleRequest(request);	
+		customer.setNetworkId(networkId);
 		cs.addCustomer(customer);
 		
 		return mv;

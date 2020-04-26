@@ -27,7 +27,8 @@
 				<thead>
 					<tr>
 						<th>ID</th>
-						<th>Data</th>
+						<th>NETWORK</th>
+						<th>DATA</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -35,6 +36,7 @@
 					<c:forEach var="c" items="${customers}">
 						<tr>
 							<td>${c.id}</td>
+							<td>${c.networkId}</td>							
 							<td>${c.data}</td>
 						</tr>
 					</c:forEach>
